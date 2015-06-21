@@ -1,5 +1,5 @@
 class Triangle
-	attr_accessor :side1, :side2, :side3
+	attr_reader :side1, :side2, :side3
 
 	def initialize(side1, side2, side3)
 		@side1 = side1
@@ -19,7 +19,7 @@ class Triangle
 		!(equilateral || isosceles)
 	end
 
-	def calculate_angles(a,b,c)
+	def calculate_angles(a, b, c)
 		angleA = radians_to_degrees(Math.acos((b**2 + c**2 - a**2) / (2.0 * b * c)))
 		angleB = radians_to_degrees(Math.acos((a**2 + c**2 - b**2) / (2.0 * a * c)))
 		angleC = radians_to_degrees(Math.acos((a**2 + b**2 - c**2) / (2.0 * a * b)))
@@ -34,25 +34,25 @@ class Triangle
 	def type_facts
 		case
 		when equilateral
-			puts "This triangle is equilateral!"
+			"This triangle is equilateral!"
 		when isosceles
-			puts "This triangle is isosceles! Also, that word is hard to type."
+			"This triangle is isosceles! Also, that word is hard to type."
 		when scalene
-			puts "This triangle is scalene and mathematically boring."
+			"This triangle is scalene and mathematically boring."
 		end
 	end
 
 	def angle_facts
 		angles = calculate_angles(side1, side2, side3)
-		puts "The angles of this triangle are " + angles.join(',')
+		"The angles of this triangle are " + angles.join(',')
 		if angles.include?(90)
-			puts "This triangle is also a right triangle!"
+			"This triangle is also a right triangle!"
 		end
 	end
 
 	def recite_facts
-		print type_facts
-		print angle_facts
+		puts type_facts
+		puts angle_facts
 	end
 end
 
@@ -61,7 +61,7 @@ triangles = [
 	[5, 5, 5],
 	[5, 12, 13]
 ]
-triangles.each { |sides|
+triangles.each do |sides|
 	tri = Triangle.new(*sides)
 	tri.recite_facts
-}
+end
