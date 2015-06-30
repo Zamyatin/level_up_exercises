@@ -10,31 +10,18 @@ class Dinosaur
     @walking = args[:walking]
     @description = args[:description]
   end
-
-  # def self.list_carnivores
-  #   @diet == "Carnivore" || "Insectivore" || "Piscivore"
-  # end
-
-  def self.list_bipeds
-    @walking == "Biped"
+  
+  def to_json
+    dinosaur = {
+      name: @name, 
+      period: @period,
+      continent: @continent,
+      diet: @diet,
+      weight_in_lbs: @weight_in_lbs,
+      walking: @walking,
+      description: @description
+    }
+    dinosaur.to_json
   end
-
-  def self.list_by_period(period)
-    if period == "Cretaceous"
-      @period == "Late Cretaceous" || "Cretaceous" || "Early Cretaceous"
-    else
-      @period == (period)
-    end
-  end
-
-  # def self.list_by_size!(size)
-  #   if size.downcase != "big" || "small"
-  #     raise "This is not an appropriate size!"
-  #   elsif size.downcase == "big"
-  #     @size >= 2000
-  #   else
-  #     @size < 2000
-  #   end
-  # end
 
 end

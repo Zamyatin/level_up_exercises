@@ -5,11 +5,58 @@ class DinoParser
     @files = files
     @dinosaurs = []
   end
-
+  
+  def add(dino)
+    @dinosaurs << dino
+  end
+  
+  def find_bipeds
+    self.dinosaurs.select{ |dino| dino.walking == "Biped" }
+  end
+  
+  def find_carnivores
+    self.dinosaurs.select{ |dino| dino.diet == "Carnivore" }
+  end
+  
+  def find_by_period(era)
+    self.dinosaurs.select{ |dino| dino.period.include? era }
+  end
+  
+  def find_by_size!(size)
+    case size 
+    when size == "big"
+      self.dinosaurs.select{ |dino| dino.weight_in_lbs > 2000 }
+    when size == "small"
+      self.dinosaurs.select{ |dino| dino.weight_in_lbs <= 2000 }
+    else 
+      raise "That's not an acceptable input!"
+    end
+  end
+  
+  def find_by_property(args = {})
+    
+  end
+  
   def process_files
     self.files.each { |file| parse_dinosaurs(file) }
   end
-
+  
+  def to_json
+    dinos = self.dinosaurs.each { |dino| dino.to_json }
+    dinos.to_json
+  end
+  
+  def save(filename)
+    if ! File.exist?
+      File.new(filename, "w+")
+    end  
+    
+    CSV.open(filename, "w") do |csv|
+      @dinosaurs.each do |dino|
+        csv << [dino.name, dino.period, dino.continent, dino.diet, dino.weight_in_lbs, dino.walking, dino.description]
+      end
+    end
+  end
 
   private
   def standardize(args={})
@@ -18,7 +65,7 @@ class DinoParser
       :period => args[:period],
       :continent => args[:continent],
       :diet => args[:diet] || args[:carnivore],
-      :weight_in_lbs => args[:weight_in_lbs].to_i || args[:weight].to_i,
+      :weight_in_lbs => args[:weight_in_lbs] || args[:weight],
       :walking => args[:walking],
       :description => args[:description]
     }
@@ -30,7 +77,6 @@ class DinoParser
     else
       standard_keys[:diet] = "Herbivore"
     end
-
     standard_keys
   end
 
