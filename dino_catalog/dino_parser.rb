@@ -23,10 +23,9 @@ class DinoParser
   end
   
   def find_by_size!(size)
-    case size 
-    when size == "big"
+    if size.downcase == "big"
       self.dinosaurs.select{ |dino| dino.weight_in_lbs > 2000 }
-    when size == "small"
+    elsif size.downcase == "small"
       self.dinosaurs.select{ |dino| dino.weight_in_lbs <= 2000 }
     else 
       raise "That's not an acceptable input!"
@@ -50,7 +49,6 @@ class DinoParser
     if ! File.exist?
       File.new(filename, "w+")
     end  
-    
     CSV.open(filename, "w") do |csv|
       @dinosaurs.each do |dino|
         csv << [dino.name, dino.period, dino.continent, dino.diet, dino.weight_in_lbs, dino.walking, dino.description]
@@ -69,15 +67,32 @@ class DinoParser
       :walking => args[:walking],
       :description => args[:description]
     }
-    case standard_keys[:diet]
-    when "Yes"
-      standard_keys[:diet] = "Carnivore"
-    when ""
-      standard_keys[:diet] = "No Info"
-    else
-      standard_keys[:diet] = "Herbivore"
-    end
+    
+    clean_diet(standard_keys)
+    clean_weight(standard_keys)
     standard_keys
+  end
+  
+  def clean_diet(keys={})
+    case keys[:diet]
+    when "Yes"
+      keys[:diet] = "Carnivore"
+    when ""
+      keys[:diet] = "No Info"
+    else
+      keys[:diet] = "Herbivore"
+    end  
+  end
+  
+  def clean_weight(keys={})
+    case keys[:weight_in_lbs]
+    when ""
+      keys[:weight_in_lbs] = "No Info"
+    when nil
+      keys[:weight_in_lbs] = "No Info"
+    else 
+      keys[:weight_in_lbs] = keys[:weight_in_lbs].to_i
+    end
   end
 
   def parse_dinosaurs(file)
