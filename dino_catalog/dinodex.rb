@@ -1,12 +1,39 @@
-require 'csv'
-require 'json'
+class DinoDex
+  attr_accessor :dinosaurs
 
-require_relative 'dinosaur.rb'
-require_relative 'dino_parser.rb'
-require_relative 'dinoviewer.rb'
-
-puts "Hello there Dinosaur Hunter! What would you like to do today??"
-puts "--- Type 'open' to add some CSV files."
-puts "--- Type 'save' to save your Dinosaurs."
-puts "--- Type 'add' to add a dinosaur."
-
+  def initialize
+    @dinosaurs = []
+  end
+  
+  def add(dino)
+    self.dinosaurs << dino
+  end
+  
+  def find_bipeds
+    self.dinosaurs.select{ |dino| dino.walking == "Biped" }
+  end
+  
+  def find_carnivores
+    self.dinosaurs.select{ |dino| dino.is_carnivore? }
+  end
+  
+  def find_by_period(era)
+    self.dinosaurs.select{ |dino| dino.period.include? era }
+  end
+  
+  def find_by_size!(size)
+    if size.downcase == "big"
+      self.dinosaurs.select{ |dino| dino.weight_in_lbs > 2000 }
+    elsif size.downcase == "small"
+      self.dinosaurs.select{ |dino| dino.weight_in_lbs <= 2000 }
+    else 
+      raise "That's not an acceptable input!"
+    end
+  end
+  
+  def to_json
+    dinos = self.dinosaurs.each { |dino| dino.to_json }
+    dinos.to_json
+  end
+  
+end
